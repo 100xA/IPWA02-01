@@ -26,7 +26,9 @@ JSF/CDI/JPA-Prototyp für das Melden und Bergen von Geisternetzen.
 3. Java 17 installiert
 
 ## Java 17 für Maven setzen
-`mvn` kann lokal mit einer anderen Java-Version laufen. Vor dem Build:
+`mvn` kann lokal mit einer anderen Java-Version laufen. Stelle vor dem Build sicher, dass Java 17 aktiv ist.
+
+Beispiel für macOS:
 
 ```bash
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
@@ -36,7 +38,7 @@ mvn -version
 ```
 
 ## Datenbank einrichten
-Die Standardwerte in `persistence.xml` sind:
+Die Standardwerte in `persistence.xml` sind lokale Beispielwerte:
 - URL: `jdbc:mysql://localhost:3306/ghostnetfishing?...`
 - User: `root`
 - Passwort: `root`
@@ -56,6 +58,8 @@ mysql -u root -p ghostnetfishing < src/main/resources/sql/seed.sql
 ```
 
 ## Build
+Falls lokal mehrere Java-Versionen installiert sind, stelle vor dem Build sicher, dass Java 17 aktiv ist.
+
 ```bash
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 mvn clean package
@@ -77,13 +81,13 @@ Im Projekt liegen zwei Scripts:
 
 Starten:
 ```bash
-cd /Users/janbiernacki/Dev/CollegeDev/IPWA02-01
+cd <PROJECT_ROOT>
 TOMEE_HOME=/absolute/path/to/apache-tomee-9 ./run-app.sh
 ```
 
 Mit eigenen DB-Zugangsdaten:
 ```bash
-cd /Users/janbiernacki/Dev/CollegeDev/IPWA02-01
+cd <PROJECT_ROOT>
 GHOSTNET_DB_URL="jdbc:mysql://localhost:3306/ghostnetfishing?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true" \
 GHOSTNET_DB_USER="dein_mysql_user" \
 GHOSTNET_DB_PASSWORD="dein_mysql_passwort" \
@@ -96,22 +100,22 @@ GHOSTNET_DB_USER="root" GHOSTNET_DB_PASSWORD="" ./run-app.sh
 ```
 
 Ohne Angabe von `TOMEE_HOME` verwenden die Skripte automatisch:
-`/opt/homebrew/opt/tomee-plume/libexec`
+einen im Skript hinterlegten Standardpfad. Falls dieser nicht zu deiner Umgebung passt, setze `TOMEE_HOME` explizit.
 
 ```bash
-cd /Users/janbiernacki/Dev/CollegeDev/IPWA02-01
+cd <PROJECT_ROOT>
 ./run-app.sh
 ```
 
 Stoppen:
 ```bash
-cd /Users/janbiernacki/Dev/CollegeDev/IPWA02-01
+cd <PROJECT_ROOT>
 TOMEE_HOME=/absolute/path/to/apache-tomee-9 ./stop-app.sh
 ```
 
 Oder mit Default-Pfad:
 ```bash
-cd /Users/janbiernacki/Dev/CollegeDev/IPWA02-01
+cd <PROJECT_ROOT>
 ./stop-app.sh
 ```
 
