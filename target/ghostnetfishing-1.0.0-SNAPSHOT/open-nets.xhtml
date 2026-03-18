@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>#{msg['open.title']}</title>
+    <h:outputStylesheet library="css" name="app.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <h1>#{msg['open.title']}</h1>
+        <p class="lead">#{msg['open.lead']}</p>
+
+        <h:form id="openNetsForm" styleClass="card">
+            <h:messages globalOnly="true" showSummary="false" showDetail="true" styleClass="messages"/>
+
+            <h:commandButton value="#{msg['open.reload']}" action="#{openNetsBean.reloadOpenNets}" styleClass="button"/>
+
+            <h:dataTable value="#{openNetsBean.openNets}" var="net" styleClass="data-table"
+                         rendered="#{not empty openNetsBean.openNets}">
+                <h:column>
+                    <f:facet name="header">#{msg['table.id']}</f:facet>
+                    #{net.id}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.status']}</f:facet>
+                    #{msg[openNetsBean.statusKey(net.status)]}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.latitude']}</f:facet>
+                    #{net.latitude}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.longitude']}</f:facet>
+                    #{net.longitude}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.size']}</f:facet>
+                    #{net.estimatedSizeM2}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.rescuer']}</f:facet>
+                    #{net.assignedRescuer == null ? '-' : net.assignedRescuer.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.action']}</f:facet>
+                    <h:commandButton value="#{msg['table.select']}" action="#{openNetsBean.selectNet(net.id)}" styleClass="button small"/>
+                </h:column>
+            </h:dataTable>
+
+            <h:panelGroup rendered="#{empty openNetsBean.openNets}" layout="block" styleClass="notice">
+                #{msg['open.none']}
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{openNetsBean.selectedNetId != null}" layout="block" styleClass="card nested-card">
+                <h2>
+                    <h:outputFormat value="#{msg['open.claimPanel']}">
+                        <f:param value="#{openNetsBean.selectedNetId}"/>
+                    </h:outputFormat>
+                </h2>
+                <div class="form-grid">
+                    <h:outputLabel for="rescuerName" value="#{msg['open.rescuerName']}"/>
+                    <h:panelGroup>
+                        <h:inputText id="rescuerName" value="#{openNetsBean.rescuerName}" required="true"
+                                     requiredMessage="#{msg['open.rescuerName.required']}"/>
+                        <h:message for="rescuerName" styleClass="field-error"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="rescuerPhone" value="#{msg['open.rescuerPhone']}"/>
+                    <h:panelGroup>
+                        <h:inputText id="rescuerPhone" value="#{openNetsBean.rescuerPhone}" required="true"
+                                     requiredMessage="#{msg['open.rescuerPhone.required']}"
+                                     validatorMessage="#{msg['open.phone.validator']}">
+                            <f:validateRegex pattern="^\+?[0-9()\-\s./]{6,30}$"/>
+                        </h:inputText>
+                        <h:message for="rescuerPhone" styleClass="field-error"/>
+                    </h:panelGroup>
+                </div>
+                <div class="actions">
+                    <h:commandButton value="#{msg['open.claim']}" action="#{openNetsBean.claimSelected}" styleClass="button primary"/>
+                </div>
+            </h:panelGroup>
+
+            <h:inputHidden id="openNetsJson" value="#{openNetsBean.openNetsJson}"/>
+            <div id="map-i18n"
+                 style="display:none"
+                 data-invalid="#{msg['map.invalidData']}"
+                 data-unassigned="#{msg['map.unassigned']}"
+                 data-status="#{msg['map.status']}"
+                 data-size="#{msg['map.size']}"
+                 data-recovery="#{msg['map.recovery']}"
+                 data-net="#{msg['map.net']}"></div>
+
+            <h2>#{msg['open.mapTitle']}</h2>
+            <div id="open-map" class="map"></div>
+
+            <div class="actions">
+                <h:link outcome="index" value="#{msg['nav.back']}" styleClass="button"/>
+            </div>
+        </h:form>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <h:outputScript library="js" name="map.js" target="body"/>
+</h:body>
+</html>

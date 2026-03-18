@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>#{msg['viewExpired.title']}</title>
+    <h:outputStylesheet library="css" name="app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <section class="card">
+            <h1>#{msg['viewExpired.title']}</h1>
+            <p class="lead">#{msg['viewExpired.message']}</p>
+            <div class="actions">
+                <h:link outcome="report-net" value="#{msg['viewExpired.retryReport']}" styleClass="button primary"/>
+                <h:link outcome="index" value="#{msg['viewExpired.toHome']}" styleClass="button"/>
+            </div>
+        </section>
+    </main>
+</h:body>
+</html>

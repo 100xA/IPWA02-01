@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>#{msg['report.title']}</title>
+    <h:outputStylesheet library="css" name="app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <h1>#{msg['report.title']}</h1>
+        <p class="lead">#{msg['report.lead']}</p>
+
+        <h:form id="reportForm" styleClass="card">
+            <h:messages globalOnly="true" showSummary="false" showDetail="true" styleClass="messages"/>
+
+            <div class="form-grid">
+                <h:outputLabel for="latitude" value="#{msg['report.latitude']}"/>
+                <h:panelGroup>
+                    <h:inputText id="latitude" value="#{reportNetBean.latitude}" required="true" requiredMessage="#{msg['report.latitude.required']}">
+                        <f:validateDoubleRange minimum="-90" maximum="90"/>
+                    </h:inputText>
+                    <h:message for="latitude" styleClass="field-error"/>
+                </h:panelGroup>
+
+                <h:outputLabel for="longitude" value="#{msg['report.longitude']}"/>
+                <h:panelGroup>
+                    <h:inputText id="longitude" value="#{reportNetBean.longitude}" required="true" requiredMessage="#{msg['report.longitude.required']}">
+                        <f:validateDoubleRange minimum="-180" maximum="180"/>
+                    </h:inputText>
+                    <h:message for="longitude" styleClass="field-error"/>
+                </h:panelGroup>
+
+                <h:outputLabel for="estimatedSize" value="#{msg['report.estimatedSize']}"/>
+                <h:panelGroup>
+                    <h:inputText id="estimatedSize" value="#{reportNetBean.estimatedSizeM2}" required="true" requiredMessage="#{msg['report.estimatedSize.required']}">
+                        <f:validateDoubleRange minimum="0.1"/>
+                    </h:inputText>
+                    <h:message for="estimatedSize" styleClass="field-error"/>
+                </h:panelGroup>
+
+                <h:outputLabel for="anonymous" value="#{msg['report.anonymous']}"/>
+                <h:panelGroup>
+                    <h:selectBooleanCheckbox id="anonymous" value="#{reportNetBean.anonymousReport}">
+                        <f:ajax listener="#{reportNetBean.onAnonymousToggle}" render="reporterPanel"/>
+                    </h:selectBooleanCheckbox>
+                </h:panelGroup>
+            </div>
+
+            <h:panelGroup id="reporterPanel" layout="block" styleClass="card nested-card">
+                <h2>#{msg['report.reporterPanel']}</h2>
+                <div class="form-grid">
+                    <h:outputLabel for="reporterName" value="#{msg['report.reporterName']}"/>
+                    <h:panelGroup>
+                        <h:inputText id="reporterName" value="#{reportNetBean.reporterName}"
+                                     required="#{!reportNetBean.anonymousReport}"
+                                     requiredMessage="#{msg['report.reporterName.required']}"
+                                     disabled="#{reportNetBean.anonymousReport}"/>
+                        <h:message for="reporterName" styleClass="field-error"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="reporterPhone" value="#{msg['report.reporterPhone']}"/>
+                    <h:panelGroup>
+                        <h:inputText id="reporterPhone" value="#{reportNetBean.reporterPhone}"
+                                     required="#{!reportNetBean.anonymousReport}"
+                                     requiredMessage="#{msg['report.reporterPhone.required']}"
+                                     validatorMessage="#{msg['report.phone.validator']}"
+                                     disabled="#{reportNetBean.anonymousReport}">
+                            <f:validateRegex pattern="^\+?[0-9()\-\s./]{6,30}$"/>
+                        </h:inputText>
+                        <h:message for="reporterPhone" styleClass="field-error"/>
+                    </h:panelGroup>
+                </div>
+            </h:panelGroup>
+
+            <div class="actions">
+                <h:commandButton value="#{msg['report.submit']}" action="#{reportNetBean.submit}" styleClass="button primary"/>
+                <h:link outcome="index" value="#{msg['nav.back']}" styleClass="button"/>
+            </div>
+        </h:form>
+    </main>
+</h:body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>#{msg['recovery.title']}</title>
+    <h:outputStylesheet library="css" name="app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <h1>#{msg['recovery.title']}</h1>
+        <p class="lead">#{msg['recovery.lead']}</p>
+
+        <h:form id="recoveryForm" styleClass="card">
+            <h:messages globalOnly="true" showSummary="false" showDetail="true" styleClass="messages"/>
+
+            <div class="form-grid">
+                <h:outputLabel for="searchPhone" value="#{msg['recovery.phone']}"/>
+                <h:panelGroup>
+                    <h:inputText id="searchPhone" value="#{recoveryBean.rescuerPhone}" required="true"
+                                 requiredMessage="#{msg['recovery.phone.required']}"
+                                 validatorMessage="#{msg['recovery.phone.validator']}">
+                        <f:validateRegex pattern="^\+?[0-9()\-\s./]{6,30}$"/>
+                    </h:inputText>
+                    <h:message for="searchPhone" styleClass="field-error"/>
+                </h:panelGroup>
+            </div>
+
+            <div class="actions">
+                <h:commandButton value="#{msg['recovery.search']}" action="#{recoveryBean.searchAssigned}" styleClass="button"/>
+            </div>
+
+            <h:dataTable value="#{recoveryBean.assignedNets}" var="net" styleClass="data-table"
+                         rendered="#{not empty recoveryBean.assignedNets}">
+                <h:column>
+                    <f:facet name="header">#{msg['table.id']}</f:facet>
+                    #{net.id}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.status']}</f:facet>
+                    #{msg[recoveryBean.statusKey(net.status)]}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.latitude']}</f:facet>
+                    #{net.latitude}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.longitude']}</f:facet>
+                    #{net.longitude}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.size']}</f:facet>
+                    #{net.estimatedSizeM2}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{msg['table.action']}</f:facet>
+                    <h:commandButton value="#{msg['recovery.markRecovered']}" action="#{recoveryBean.markRecovered(net.id)}" styleClass="button primary small"/>
+                </h:column>
+            </h:dataTable>
+
+            <div class="actions">
+                <h:link outcome="index" value="#{msg['nav.back']}" styleClass="button"/>
+            </div>
+        </h:form>
+    </main>
+</h:body>
+</html>
